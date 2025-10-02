@@ -1,0 +1,193 @@
+body {
+    font-family: 'Sarabun', sans-serif; /* ใช้ฟอนต์ไทยที่นิยม */
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    color: #333;
+}
+
+.container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    width: 100%;
+    text-align: center;
+}
+
+h1 {
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-size: 2.2em;
+}
+
+h2 {
+    color: #34495e;
+    border-bottom: 2px solid #ecf0f1;
+    padding-bottom: 10px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+
+h3 {
+    color: #34495e;
+    margin-top: 20px;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+}
+
+.card {
+    background-color: #fdfdfd;
+    border: 1px solid #e0e6ed;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    text-align: left;
+}
+
+.instrument-checklist {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.instrument-checklist label {
+    display: block;
+    margin-bottom: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+}
+
+.instrument-checklist input[type="checkbox"] {
+    margin-right: 8px;
+    transform: scale(1.2);
+    vertical-align: middle;
+}
+
+button {
+    background-color: #28a745; /* สีเขียว */
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    margin-top: 15px;
+    margin-right: 10px;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+button#refresh-receive-btn {
+    background-color: #007bff; /* สีน้ำเงิน */
+}
+
+button#refresh-receive-btn:hover {
+    background-color: #0056b3;
+}
+
+
+.shipment-item {
+    background-color: #e9f5ff; /* สีฟ้าอ่อน */
+    border: 1px solid #cce5ff;
+    border-left: 5px solid #007bff;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.shipment-item p {
+    margin: 0;
+    font-size: 1em;
+    color: #333;
+}
+
+.shipment-item strong {
+    color: #0056b3;
+}
+
+.shipment-item button {
+    margin-top: 0;
+    padding: 8px 15px;
+    font-size: 0.9em;
+    background-color: #17a2b8; /* สีฟ้าเทอร์คอยซ์ */
+}
+
+.shipment-item button:hover {
+    background-color: #138496;
+}
+
+.no-data {
+    color: #6c757d;
+    font-style: italic;
+    text-align: center;
+    padding: 15px;
+    border: 1px dashed #ced4da;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+.admin-area {
+    text-align: center;
+    background-color: #fff3cd; /* สีเหลืองอ่อน */
+    border-left: 5px solid #ffc107;
+}
+
+.button-link {
+    display: inline-block;
+    background-color: #6c757d; /* สีเทา */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 1em;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.button-link:hover {
+    background-color: #5a6268;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .container {
+        padding: 15px;
+    }
+    h1 {
+        font-size: 1.8em;
+    }
+    h2 {
+        font-size: 1.5em;
+    }
+    button {
+        padding: 10px 20px;
+        font-size: 1em;
+    }
+    .shipment-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .shipment-item button {
+        margin-top: 10px;
+        width: 100%;
+    }
+}
