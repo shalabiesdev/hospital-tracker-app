@@ -1,15 +1,35 @@
 // **ต้องเปลี่ยน** ใส่ URL ของ Web App ที่ได้จาก Google Apps Script ตรงนี้
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxDMXk2aj0GANTSnRMVHOTeaoDVASs5QcOdJqDawzzw6QXWgxwwrHILU04yfDU6frnTWw/exec';
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwbyCeAYN_urGuYD9AW0JGIgNprACm8FXTruhvWbS6eqHpj7-dtR6OWs-1UGn18Dg6nkA/exec';
 // **ต้องเปลี่ยน** ใส่ URL ของ Google Sheet ของคุณตรงนี้
 const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1THjak6UCGPXgsaOqJ0YBh9_jVA-e_E5ZBMmCI_qPUKo/edit?usp=sharing'; 
 
 document.addEventListener('DOMContentLoaded', () => {
+    // โหลดข้อมูลเริ่มต้น
     loadMasterList();
     loadInTransitShipments();
+
+    // --- Event Listeners หลัก ---
     document.getElementById('dispatch-btn').addEventListener('click', handleDispatch);
     document.getElementById('refresh-receive-btn').addEventListener('click', loadInTransitShipments);
     document.querySelector('#admin-section a').href = GOOGLE_SHEET_URL;
+
+    // --- Modal Event Listeners ---
+    const modal = document.getElementById('receive-modal');
+    const closeBtn = document.querySelector('.close-button');
+    const cancelBtn = document.getElementById('modal-cancel-btn');
+    const confirmBtn = document.getElementById('modal-confirm-btn');
+
+    closeBtn.onclick = () => modal.style.display = "none";
+    cancelBtn.onclick = () => modal.style.display = "none";
+    window.onclick = (event) => {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+    // เมื่อกดปุ่มยืนยันใน Modal
+    confirmBtn.addEventListener('click', handleConfirmReceive);
 });
+
 
 // --- ฟังก์ชันสำหรับโหลด Master List (รายการเครื่องมือทั้งหมด) ---
 async function loadMasterList() {
@@ -94,25 +114,26 @@ async function handleDispatch() {
 async function loadInTransitShipments() {
     const listContainer = document.getElementById('in-transit-shipments');
     listContainer.innerHTML = '<p>กำลังโหลดรายการที่กำลังขนส่ง...</p>';
-
     try {
-        // *** [แก้ไข] เปลี่ยนเป็น GET และส่ง action ผ่าน URL ***
         const response = await fetch(`${WEB_APP_URL}?action=getInTransitShipments`);
         const data = await response.json();
-
         if (data.status === 'success' && data.shipments.length > 0) {
             listContainer.innerHTML = '';
             data.shipments.forEach(shipment => {
                 const itemDiv = document.createElement('div');
                 itemDiv.classList.add('shipment-item');
+                // แปลง Array เป็นข้อความสำหรับแสดงผล
+                const itemsForDisplay = shipment.Items.join(', '); 
                 itemDiv.innerHTML = `
                     <div>
                         <p><strong>ID:</strong> ${shipment.ShipmentID}</p>
                         <p><strong>ส่งออกเมื่อ:</strong> ${new Date(shipment.DispatchTimestamp).toLocaleString('th-TH')}</p>
-                        <p><strong>รายการ:</strong> ${shipment.Items}</p>
+                        <p><strong>รายการ:</strong> ${itemsForDisplay}</p>
                     </div>
-                    <button onclick="handleReceive('${shipment.ShipmentID}', this)">รับของ</button>
+                    <button class="receive-btn">รับของและตรวจสอบ</button>
                 `;
+                // เพิ่ม event listener ให้ปุ่ม 'รับของ'
+                itemDiv.querySelector('.receive-btn').addEventListener('click', () => openReceiveModal(shipment));
                 listContainer.appendChild(itemDiv);
             });
         } else {
@@ -125,22 +146,55 @@ async function loadInTransitShipments() {
 }
 
 
-// --- ฟังก์ชันสำหรับจัดการการรับของ (เวอร์ชันแก้ไข - ใช้ GET Tunneling) ---
-async function handleReceive(shipmentId, buttonElement) {
+
+function openReceiveModal(shipment) {
+    const modal = document.getElementById('receive-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const checklistContainer = document.getElementById('modal-checklist');
+    const confirmBtn = document.getElementById('modal-confirm-btn');
+
+    // ตั้งค่าหัวข้อ Modal
+    modalTitle.textContent = `ตรวจสอบรายการรับของ ID: ${shipment.ShipmentID}`;
+    
+    // สร้าง Checkboxes จากรายการ Items
+    checklistContainer.innerHTML = '';
+    shipment.Items.forEach(item => {
+        const label = document.createElement('label');
+        label.innerHTML = `<input type="checkbox" value="${item}" checked> ${item}`; // ให้ติ๊กไว้เป็นค่าเริ่มต้น
+        checklistContainer.appendChild(label);
+    });
+
+    // เก็บ shipmentId ไว้ที่ปุ่มยืนยันเพื่อนำไปใช้ต่อ
+    confirmBtn.dataset.shipmentId = shipment.ShipmentID;
+
+    // แสดง Modal
+    modal.style.display = "block";
+}
+
+async function handleConfirmReceive() {
+    const confirmBtn = document.getElementById('modal-confirm-btn');
+    const shipmentId = confirmBtn.dataset.shipmentId;
+
+    // รวบรวมรายการที่ถูกติ๊ก
+    const verifiedItems = [];
+    document.querySelectorAll('#modal-checklist input:checked').forEach(checkbox => {
+        verifiedItems.push(checkbox.value);
+    });
+
     const userName = prompt('ชื่อผู้รับ (รพ.สมุทรสาคร):', 'พนักงานสมุทรสาคร');
-    if (!userName) return; // ถ้าผู้ใช้กด Cancel
+    if (!userName) return;
 
     const payload = {
         action: 'receive',
         shipmentId: shipmentId,
-        user: userName
+        user: userName,
+        verifiedItems: verifiedItems // ส่งรายการที่ตรวจสอบแล้วไปด้วย
     };
 
     try {
-        buttonElement.disabled = true;
-        buttonElement.textContent = 'กำลังบันทึก...';
+        confirmBtn.disabled = true;
+        confirmBtn.textContent = 'กำลังบันทึก...';
 
-        // --- ส่วนสำคัญที่แก้ไข (ทำเหมือนกับ handleDispatch) ---
         const payloadString = JSON.stringify(payload);
         const encodedPayload = encodeURIComponent(payloadString);
         const requestUrl = `${WEB_APP_URL}?payload=${encodedPayload}`;
@@ -150,17 +204,17 @@ async function handleReceive(shipmentId, buttonElement) {
 
         if (data.status === 'success') {
             alert('บันทึกการรับของสำเร็จ!');
-            loadInTransitShipments(); // โหลดรายการใหม่เพื่อให้รายการที่รับแล้วหายไป
+            document.getElementById('receive-modal').style.display = "none"; // ปิด Modal
+            loadInTransitShipments(); // โหลดรายการใหม่
         } else {
             alert('เกิดข้อผิดพลาดในการรับของ: ' + data.message);
         }
     } catch (error) {
-        console.error('Error during receive:', error);
+        console.error('Error during receive confirmation:', error);
         alert('เกิดข้อผิดพลาดในการรับของ (เชื่อมต่อ Server ไม่ได้)');
     } finally {
-        buttonElement.disabled = false;
-        buttonElement.textContent = 'รับของ';
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = 'ยืนยันการรับของ';
     }
 }
-
 
