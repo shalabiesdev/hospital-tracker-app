@@ -1,5 +1,5 @@
 // **ต้องเปลี่ยน** ใส่ URL ของ Web App ที่ได้จาก Google Apps Script ตรงนี้
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzD7Ipr64htTSSD872Mcj_B3kbGpH3DoGaqTYOmyP6lvv7Fokz64Rw7xezKlA8WVRYmKA/exec';
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxDMXk2aj0GANTSnRMVHOTeaoDVASs5QcOdJqDawzzw6QXWgxwwrHILU04yfDU6frnTWw/exec';
 // **ต้องเปลี่ยน** ใส่ URL ของ Google Sheet ของคุณตรงนี้
 const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1THjak6UCGPXgsaOqJ0YBh9_jVA-e_E5ZBMmCI_qPUKo/edit?usp=sharing'; 
 
@@ -36,47 +36,9 @@ async function loadMasterList() {
         listContainer.innerHTML = '<p class="no-data">เกิดข้อผิดพลาดในการโหลดรายการเครื่องมือ</p>';
     }
 }
-// --- ฟังก์ชันสำหรับโหลด Master List (เวอร์ชันดึงตรงจาก Sheet ที่ Publish) ---
-// async function loadMasterList() {
-//     const listContainer = document.getElementById('tha-chalom-instrument-list');
-//     listContainer.innerHTML = '<p>กำลังโหลดรายการเครื่องมือ...</p>';
 
-//     // *** [สำคัญ] นำ URL ที่ได้จากการ Publish to the web มาวางตรงนี้ ***
-//     const PUBLISHED_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSTdr-1-ZrrOKwx0yJ3FxQ1Y8zbVhgacrS46IOXpv6o7gqYqkJ45A5Em3DZ6aIEwXgugzd3X8HcwSs1/pub?gid=1195156931&single=true&output=csv'; 
-
-//     try {
-//         // ดึงข้อมูลจาก URL ที่เป็นไฟล์ CSV
-//         const response = await fetch(PUBLISHED_SHEET_URL);
-
-//         // แปลงข้อมูลที่ได้จาก CSV (ที่เป็น Text ธรรมดา) ให้พร้อมใช้งาน
-//         const csvText = await response.text();
-//         console.log('csvText');
-        
-//         // แยกข้อมูลแต่ละบรรทัด และตัดบรรทัดแรก (ที่เป็น Header) ทิ้งไป
-//         const rows = csvText.split('\n').slice(1); 
-        
-//         // ดึงข้อมูลเฉพาะคอลัมน์แรก (ItemName) จากแต่ละบรรทัด
-//         const masterItems = rows.map(row => {
-//             const columns = row.split(',');
-//             return columns[0]; // เอาแค่คอลัมน์แรก
-//         }).filter(String); // กรองค่าว่างออก
-
-//         if (masterItems.length > 0) {
-//             listContainer.innerHTML = '';
-//             masterItems.forEach(item => {
-//                 const label = document.createElement('label');
-//                 label.innerHTML = `<input type="checkbox" value="${item}"> ${item}`;
-//                 listContainer.appendChild(label);
-//             });
-//         } else {
-//             listContainer.innerHTML = `<p class="no-data">ไม่พบรายการเครื่องมือ (อาจจะยังไม่มีข้อมูลในชีต)</p>`;
-//         }
-//     } catch (error) {
-//         console.error('Error loading directly from published sheet:', error);
-//         listContainer.innerHTML = '<p class="no-data">เกิดข้อผิดพลาดในการโหลดรายการเครื่องมือโดยตรง</p>';
-//     }
-// }
 // --- ฟังก์ชันสำหรับจัดการการส่งออก (ใช้ POST ถูกต้องแล้ว) ---
+// --- ฟังก์ชันสำหรับจัดการการส่งออก (เวอร์ชันแก้ไข - ใช้ GET Tunneling) ---
 async function handleDispatch() {
     const selectedItems = [];
     document.querySelectorAll('#tha-chalom-instrument-list input:checked').forEach(input => {
@@ -87,7 +49,7 @@ async function handleDispatch() {
         return;
     }
     const userName = prompt('ชื่อผู้ส่ง (รพ.ท่าฉลอม):', 'พนักงานท่าฉลอม');
-    if (!userName) return;
+    if (!userName) return; // ถ้าผู้ใช้กด Cancel
 
     const payload = {
         action: 'dispatch',
@@ -99,17 +61,25 @@ async function handleDispatch() {
     try {
         dispatchBtn.disabled = true;
         dispatchBtn.textContent = 'กำลังส่งออก...';
-        const response = await fetch(WEB_APP_URL, {
-            method: 'POST',
-            body: JSON.stringify(payload),
-            headers: { 'Content-Type': 'application/json' }
-        });
+
+        // --- ส่วนสำคัญที่แก้ไข ---
+        // 1. แปลง object 'payload' ให้เป็นข้อความ JSON (String)
+        const payloadString = JSON.stringify(payload);
+        // 2. เข้ารหัสข้อความนั้นเพื่อให้สามารถส่งผ่าน URL ได้อย่างปลอดภัย
+        const encodedPayload = encodeURIComponent(payloadString);
+        // 3. สร้าง URL สำหรับ request โดยแนบข้อมูลที่เข้ารหัสแล้วเข้าไป
+        const requestUrl = `${WEB_APP_URL}?payload=${encodedPayload}`;
+        
+        // 4. ส่ง request แบบ GET ไปยัง URL ที่สร้างขึ้น
+        const response = await fetch(requestUrl);
         const data = await response.json();
+
         if (data.status === 'success') {
             alert(`บันทึกการส่งออกสำเร็จ! ID: ${data.shipmentId}`);
             document.querySelectorAll('#tha-chalom-instrument-list input:checked').forEach(input => input.checked = false);
-            loadInTransitShipments();
+            loadInTransitShipments(); // โหลดรายการที่กำลังขนส่งใหม่
         } else {
+            // แสดง Error ที่ได้จาก Backend
             alert('เกิดข้อผิดพลาดในการส่งออก: ' + data.message);
         }
     } catch (error) {
@@ -120,7 +90,6 @@ async function handleDispatch() {
         dispatchBtn.textContent = 'กดเพื่อส่งออก 🚀';
     }
 }
-
 // --- ฟังก์ชันสำหรับโหลดรายการที่กำลังขนส่ง (สำหรับ รพ.สมุทรสาคร) ---
 async function loadInTransitShipments() {
     const listContainer = document.getElementById('in-transit-shipments');
@@ -155,10 +124,11 @@ async function loadInTransitShipments() {
     }
 }
 
-// --- ฟังก์ชันสำหรับจัดการการรับของ (ใช้ POST ถูกต้องแล้ว) ---
+
+// --- ฟังก์ชันสำหรับจัดการการรับของ (เวอร์ชันแก้ไข - ใช้ GET Tunneling) ---
 async function handleReceive(shipmentId, buttonElement) {
     const userName = prompt('ชื่อผู้รับ (รพ.สมุทรสาคร):', 'พนักงานสมุทรสาคร');
-    if (!userName) return;
+    if (!userName) return; // ถ้าผู้ใช้กด Cancel
 
     const payload = {
         action: 'receive',
@@ -169,15 +139,18 @@ async function handleReceive(shipmentId, buttonElement) {
     try {
         buttonElement.disabled = true;
         buttonElement.textContent = 'กำลังบันทึก...';
-        const response = await fetch(WEB_APP_URL, {
-            method: 'POST',
-            body: JSON.stringify(payload),
-            headers: { 'Content-Type': 'application/json' }
-        });
+
+        // --- ส่วนสำคัญที่แก้ไข (ทำเหมือนกับ handleDispatch) ---
+        const payloadString = JSON.stringify(payload);
+        const encodedPayload = encodeURIComponent(payloadString);
+        const requestUrl = `${WEB_APP_URL}?payload=${encodedPayload}`;
+        
+        const response = await fetch(requestUrl);
         const data = await response.json();
+
         if (data.status === 'success') {
             alert('บันทึกการรับของสำเร็จ!');
-            loadInTransitShipments();
+            loadInTransitShipments(); // โหลดรายการใหม่เพื่อให้รายการที่รับแล้วหายไป
         } else {
             alert('เกิดข้อผิดพลาดในการรับของ: ' + data.message);
         }
@@ -189,8 +162,4 @@ async function handleReceive(shipmentId, buttonElement) {
         buttonElement.textContent = 'รับของ';
     }
 }
-
-
-
-
 
