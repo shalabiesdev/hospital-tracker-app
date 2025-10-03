@@ -12,31 +12,69 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // --- ฟังก์ชันสำหรับโหลด Master List (รายการเครื่องมือทั้งหมด) ---
+// async function loadMasterList() {
+//     const listContainer = document.getElementById('tha-chalom-instrument-list');
+//     listContainer.innerHTML = '<p>กำลังโหลดรายการเครื่องมือ...</p>';
+
+//     try {
+//         // *** [แก้ไข] เปลี่ยนเป็น GET และส่ง action ผ่าน URL ***
+//         const response = await fetch(`${WEB_APP_URL}?action=getMasterList`);
+//         const data = await response.json();
+
+//         if (data.status === 'success' && data.masterItems.length > 0) {
+//             listContainer.innerHTML = '';
+//             data.masterItems.forEach(item => {
+//                 const label = document.createElement('label');
+//                 label.innerHTML = `<input type="checkbox" value="${item}"> ${item}`;
+//                 listContainer.appendChild(label);
+//             });
+//         } else {
+//             listContainer.innerHTML = `<p class="no-data">ไม่พบรายการเครื่องมือใน MasterList (Error: ${data.message || 'No items found'})</p>`;
+//         }
+//     } catch (error) {
+//         console.error('Error loading master list:', error);
+//         listContainer.innerHTML = '<p class="no-data">เกิดข้อผิดพลาดในการโหลดรายการเครื่องมือ</p>';
+//     }
+// }
+// --- ฟังก์ชันสำหรับโหลด Master List (เวอร์ชันดึงตรงจาก Sheet ที่ Publish) ---
 async function loadMasterList() {
     const listContainer = document.getElementById('tha-chalom-instrument-list');
     listContainer.innerHTML = '<p>กำลังโหลดรายการเครื่องมือ...</p>';
 
-    try {
-        // *** [แก้ไข] เปลี่ยนเป็น GET และส่ง action ผ่าน URL ***
-        const response = await fetch(`${WEB_APP_URL}?action=getMasterList`);
-        const data = await response.json();
+    // *** [สำคัญ] นำ URL ที่ได้จากการ Publish to the web มาวางตรงนี้ ***
+    const PUBLISHED_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSTdr-1-ZrrOKwx0yJ3FxQ1Y8zbVhgacrS46IOXpv6o7gqYqkJ45A5Em3DZ6aIEwXgugzd3X8HcwSs1/pub?gid=1195156931&single=true&output=csv'; 
 
-        if (data.status === 'success' && data.masterItems.length > 0) {
+    try {
+        // ดึงข้อมูลจาก URL ที่เป็นไฟล์ CSV
+        const response = await fetch(PUBLISHED_SHEET_URL);
+
+        // แปลงข้อมูลที่ได้จาก CSV (ที่เป็น Text ธรรมดา) ให้พร้อมใช้งาน
+        const csvText = await response.text();
+        
+        // แยกข้อมูลแต่ละบรรทัด และตัดบรรทัดแรก (ที่เป็น Header) ทิ้งไป
+        const rows = csvText.split('\n').slice(1); 
+        
+        // ดึงข้อมูลเฉพาะคอลัมน์แรก (ItemName) จากแต่ละบรรทัด
+        const masterItems = rows.map(row => {
+            const columns = row.split(',');
+            return columns[0]; // เอาแค่คอลัมน์แรก
+        }).filter(String); // กรองค่าว่างออก
+
+        if (masterItems.length > 0) {
             listContainer.innerHTML = '';
-            data.masterItems.forEach(item => {
+            masterItems.forEach(item => {
                 const label = document.createElement('label');
                 label.innerHTML = `<input type="checkbox" value="${item}"> ${item}`;
                 listContainer.appendChild(label);
             });
         } else {
-            listContainer.innerHTML = `<p class="no-data">ไม่พบรายการเครื่องมือใน MasterList (Error: ${data.message || 'No items found'})</p>`;
+            listContainer.innerHTML = `<p class="no-data">ไม่พบรายการเครื่องมือ (อาจจะยังไม่มีข้อมูลในชีต)</p>`;
         }
     } catch (error) {
-        console.error('Error loading master list:', error);
-        listContainer.innerHTML = '<p class="no-data">เกิดข้อผิดพลาดในการโหลดรายการเครื่องมือ</p>';
+        console.error('Error loading directly from published sheet:', error);
+        listContainer.innerHTML = '<p class="no-data">เกิดข้อผิดพลาดในการโหลดรายการเครื่องมือโดยตรง</p>';
     }
 }
-
 // --- ฟังก์ชันสำหรับจัดการการส่งออก (ใช้ POST ถูกต้องแล้ว) ---
 async function handleDispatch() {
     const selectedItems = [];
@@ -150,4 +188,5 @@ async function handleReceive(shipmentId, buttonElement) {
         buttonElement.textContent = 'รับของ';
     }
 }
+
 
