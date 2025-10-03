@@ -1,7 +1,7 @@
 // **ต้องเปลี่ยน** ใส่ URL ของ Web App ที่ได้จาก Google Apps Script ตรงนี้
 const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw7unYqUdAvhAilbOSgNFTnwBk21dTb0gxigtCIcYC6qvc9IgXuZeeCC5VDIBcO-LTyPA/exec';
 // **ต้องเปลี่ยน** ใส่ URL ของ Google Sheet ของคุณตรงนี้
-const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1THjak6UCGPXgsaOqJ0YBh9_jVA-e_E5ZBMmCI_qPUKo/edit'; 
+const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1THjak6UCGPXgsaOqJ0YBh9_jVA-e_E5ZBMmCI_qPUKo/edit?usp=sharing'; 
 
 document.addEventListener('DOMContentLoaded', () => {
     loadMasterList();
@@ -150,3 +150,4 @@ async function handleReceive(shipmentId, buttonElement) {
         buttonElement.textContent = 'รับของ';
     }
 }
+
