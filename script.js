@@ -50,6 +50,7 @@ async function loadMasterList() {
 
         // แปลงข้อมูลที่ได้จาก CSV (ที่เป็น Text ธรรมดา) ให้พร้อมใช้งาน
         const csvText = await response.text();
+        console.log('csvText');
         
         // แยกข้อมูลแต่ละบรรทัด และตัดบรรทัดแรก (ที่เป็น Header) ทิ้งไป
         const rows = csvText.split('\n').slice(1); 
@@ -188,5 +189,6 @@ async function handleReceive(shipmentId, buttonElement) {
         buttonElement.textContent = 'รับของ';
     }
 }
+
 
 
