@@ -1,5 +1,6 @@
 body {
-    font-family: 'Sarabun', sans-serif; /* ใช้ฟอนต์ไทยที่นิยม */
+    font-family: 'Sarabun', sans-serif;
+    /* ใช้ฟอนต์ไทยที่นิยม */
     background-color: #f0f2f5;
     margin: 0;
     padding: 20px;
@@ -53,7 +54,7 @@ h3 {
 }
 
 .instrument-checklist {
-    max-height: 200px;
+    max-height: 400px;
     overflow-y: auto;
     border: 1px solid #ddd;
     padding: 10px;
@@ -76,7 +77,8 @@ h3 {
 }
 
 button {
-    background-color: #28a745; /* สีเขียว */
+    background-color: #28a745;
+    /* สีเขียว */
     color: white;
     padding: 12px 25px;
     border: none;
@@ -94,7 +96,8 @@ button:hover {
 }
 
 button#refresh-receive-btn {
-    background-color: #007bff; /* สีน้ำเงิน */
+    background-color: #007bff;
+    /* สีน้ำเงิน */
 }
 
 button#refresh-receive-btn:hover {
@@ -103,7 +106,8 @@ button#refresh-receive-btn:hover {
 
 
 .shipment-item {
-    background-color: #e9f5ff; /* สีฟ้าอ่อน */
+    background-color: #e9f5ff;
+    /* สีฟ้าอ่อน */
     border: 1px solid #cce5ff;
     border-left: 5px solid #007bff;
     padding: 15px;
@@ -128,7 +132,8 @@ button#refresh-receive-btn:hover {
     margin-top: 0;
     padding: 8px 15px;
     font-size: 0.9em;
-    background-color: #17a2b8; /* สีฟ้าเทอร์คอยซ์ */
+    background-color: #17a2b8;
+    /* สีฟ้าเทอร์คอยซ์ */
 }
 
 .shipment-item button:hover {
@@ -147,13 +152,15 @@ button#refresh-receive-btn:hover {
 
 .admin-area {
     text-align: center;
-    background-color: #fff3cd; /* สีเหลืองอ่อน */
+    background-color: #fff3cd;
+    /* สีเหลืองอ่อน */
     border-left: 5px solid #ffc107;
 }
 
 .button-link {
     display: inline-block;
-    background-color: #6c757d; /* สีเทา */
+    background-color: #6c757d;
+    /* สีเทา */
     color: white;
     padding: 10px 20px;
     border-radius: 5px;
@@ -172,36 +179,44 @@ button#refresh-receive-btn:hover {
     .container {
         padding: 15px;
     }
+
     h1 {
         font-size: 1.8em;
     }
+
     h2 {
         font-size: 1.5em;
     }
+
     button {
         padding: 10px 20px;
         font-size: 1em;
     }
+
     .shipment-item {
         flex-direction: column;
         align-items: flex-start;
     }
+
     .shipment-item button {
         margin-top: 10px;
         width: 100%;
     }
 }
+
 /* --- Modal Styles --- */
 .modal {
-    display: none; /* Hidden by default */
-    position: fixed; 
+    display: none;
+    /* Hidden by default */
+    position: fixed;
     z-index: 1000;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Black background with opacity */
 }
 
 .modal-content {
@@ -212,14 +227,21 @@ button#refresh-receive-btn:hover {
     width: 80%;
     max-width: 600px;
     border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     animation-name: animatetop;
     animation-duration: 0.4s;
 }
 
 @keyframes animatetop {
-    from {top: -300px; opacity: 0}
-    to {top: 0; opacity: 1}
+    from {
+        top: -300px;
+        opacity: 0
+    }
+
+    to {
+        top: 0;
+        opacity: 1
+    }
 }
 
 .modal-header {
@@ -262,12 +284,140 @@ button#refresh-receive-btn:hover {
 .button-primary {
     background-color: #007bff;
 }
+
 .button-primary:hover {
     background-color: #0056b3;
 }
+
 .button-secondary {
     background-color: #6c757d;
 }
+
 .button-secondary:hover {
     background-color: #5a6268;
+}
+
+#master-list-admin-view ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#master-list-admin-view li {
+    padding: 10px 8px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.delete-btn {
+    background-color: #dc3545; /* สีแดง */
+}
+.delete-btn:hover {
+    background-color: #c82333;
+}
+/* --- Admin Edit Styles --- */
+.edit-btn {
+    background-color: #ffc107; /* สีเหลือง */
+}
+.edit-btn:hover {
+    background-color: #e0a800;
+}
+.save-btn {
+    background-color: #28a745; /* สีเขียว */
+}
+.save-btn:hover {
+    background-color: #218838;
+}
+.cancel-btn {
+    background-color: #6c757d; /* สีเทา */
+}
+.cancel-btn:hover {
+    background-color: #5a6268;
+}
+
+#master-list-admin-view li input[type="text"] {
+    flex-grow: 1;
+    padding: 5px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* ใช้ Flexbox จัดการการแสดงผลและการแก้ไข */
+.display-view, .edit-view {
+    display: flex;
+    justify-content: space-between; /* ดัน element ไปสุดขอบซ้าย-ขวา */
+    align-items: center;            /* จัดให้อยู่กึ่งกลางแนวตั้ง */
+    width: 100%;
+}
+
+/* จัดการส่วนของชื่อรายการ */
+.display-view span {
+    flex-grow: 1; /* ให้ชื่อรายการยืดขยายเต็มพื้นที่ที่เหลือ */
+    text-align: left;
+    font-size: 1.1em;
+}
+
+/* จัดการกลุ่มของปุ่ม */
+.display-view .actions, .edit-view .actions {
+    display: flex;
+    gap: 5px; /* สร้างระยะห่างระหว่างปุ่ม */
+}
+
+/* จัดการช่อง input ตอนแก้ไข */
+.edit-view input[type="text"] {
+    flex-grow: 1;
+    margin-right: 10px;
+    padding: 6px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+/* สไตล์ปุ่มต่างๆ ในหน้า Admin */
+.admin-btn {
+    font-size: 0.85em;
+    padding: 6px 12px;
+    margin: 0;
+    white-space: nowrap; /* ไม่ให้ข้อความในปุ่มขึ้นบรรทัดใหม่ */
+}
+#new-item-input {
+  width: 100%;
+  max-width: 350px;
+  padding: 12px 16px;
+  border: 1.8px solid #d1d5db; /* ขอบเทาอ่อน */
+  border-radius: 10px;
+  font-size: 16px;
+  font-family: 'Inter', 'Prompt', sans-serif;
+  outline: none;
+  background-color: #f9fafb;
+  color: #111827;
+  transition: all 0.25s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+#new-item-input::placeholder {
+  color: #9ca3af; /* สีข้อความ placeholder */
+  letter-spacing: 0.3px;
+}
+
+#new-item-input:focus {
+  border-color: #16a34a; /* เขียวสวยๆ เหมือน AIS/Flutter theme */
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(34,197,94,0.2);
+  transform: translateY(-1px);
+}
+
+/* สไตล์สำหรับแสดง Type */
+.item-type {
+    color: #6c757d;
+    font-size: 0.9em;
+    font-style: italic;
+    margin-left: 5px;
+}
+
+/* จัดสไตล์ dropdown ในหน้า Admin */
+.add-item-form select, .edit-view select {
+    padding: 8px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
