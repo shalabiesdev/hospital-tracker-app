@@ -1,0 +1,45 @@
+<!-- admin.html (เวอร์ชันใหม่ที่ย้ายปุ่มแล้ว) -->
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - จัดการรายการเครื่องมือ</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>หน้าสำหรับ Admin</h1>
+      <div id="admin-section" class="card">
+        <h2>จัดการรายการเครื่องมือ (MasterList)</h2>
+
+        <!-- [ย้ายมาไว้ตรงนี้] ส่วนเพิ่มรายการใหม่ -->
+        <div class="add-item-container">
+          <h3>เพิ่มรายการใหม่</h3>
+          <div class="add-item-form">
+            <input
+              type="text"
+              id="new-item-input"
+              placeholder="ชื่อเครื่องมือใหม่"
+            />
+            <select id="new-item-type-select">
+              <option value="เครื่องมือผ่าตัด">เครื่องมือผ่าตัด</option>
+              <option value="อุปกรณ์">อุปกรณ์</option>
+              <option value="อื่นๆ">อื่นๆ</option>
+            </select>
+            <button id="add-item-btn" class="admin-btn save-btn">เพิ่ม</button>
+          </div>
+        </div>
+
+        <hr />
+
+        <!-- ส่วนแสดงรายการ (อยู่ด้านล่าง) -->
+        <h3>รายการทั้งหมด</h3>
+        <div id="master-list-admin-view">
+          <p>กำลังโหลดรายการ...</p>
+        </div>
+      </div>
+    </div>
+    <script src="script-admin.js"></script>
+  </body>
+</html>
