@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ระบบติดตามเครื่องมือผ่าตัด</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+        <h1>ระบบติดตามเครื่องมือผ่าตัด</h1>
+        <div id="samut-sakhon-section" class="card">
+            <h2>รพ. สมุทรสาคร (ฝั่งรับเข้า)</h2>
+            <h3>รายการที่กำลังขนส่ง:</h3>
+            <div id="in-transit-shipments"><p>กำลังโหลด...</p></div>
+            <button id="refresh-receive-btn">รีเฟรชรายการ</button>
+        </div>
+        <!-- ... โค้ด Modal ทั้งหมด ... -->
+         <div id="receive-modal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <span class="close-button">&times;</span>
+            <h2 id="modal-title">ตรวจสอบรายการรับของ</h2>
+          </div>
+          <div class="modal-body">
+            <p>กรุณาติ๊กเลือกรายการที่ได้รับจริง:</p>
+            <div id="modal-checklist" class="instrument-checklist">
+              <!-- Checkboxes will be generated here -->
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button id="modal-cancel-btn" class="button-secondary">
+              ยกเลิก
+            </button>
+            <button id="modal-confirm-btn" class="button-primary">
+              ยืนยันการรับของ
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="script-receiver.js"></script>
+</body>
+</html>
