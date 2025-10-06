@@ -54,7 +54,7 @@ h3 {
 }
 
 .instrument-checklist {
-    max-height: 350px;
+    max-height: 260px;
     overflow-y: auto;
     border: 1px solid #ddd;
     padding: 10px;
@@ -421,4 +421,5 @@ button#refresh-receive-btn:hover {
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+
 
