@@ -3,11 +3,15 @@
 // ==========================================================
 
 // **ต้องเปลี่ยน** ใส่ URL ของ Web App ที่คุณ Deploy ครั้งล่าสุด
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyjUOF4aM4R9ZcObBQS0sn1fZ0JgZHWy7H61cSTsZAOhGwhe33572B4JiFsA3c7ybnYbw/exec';
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz6QJ-jTtkRtFxuj4DNSKFRcabmCCyreQXQccrm-a582ogTPTiaMW15KTIq5QeQViyWGQ/exec';
+let fullHistoryData = [];
 
 document.addEventListener('DOMContentLoaded', () => {
     loadMasterListForAdmin();
     document.getElementById('add-item-btn').addEventListener('click', handleAddItem);
+    loadShipmentHistory();
+    document.getElementById('history-search').addEventListener('input', filterAndRenderHistory);
+    document.getElementById('history-filter').addEventListener('change', filterAndRenderHistory);
 });
 
 // --- [เวอร์ชันอัปเดต] ฟังก์ชัน loadMasterListForAdmin ---
@@ -238,4 +242,107 @@ async function handleSaveItem(listItemElement, oldItemName) {
         console.error('Error saving item:', error);
         alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
     }
+}
+async function loadShipmentHistory() {
+    const container = document.getElementById('history-table-container');
+    container.innerHTML = '<p>กำลังโหลดประวัติ...</p>';
+
+    try {
+        const response = await fetch(`${WEB_APP_URL}?action=getShipmentHistory`);
+        const data = await response.json();
+
+        if (data.status === 'success') {
+            fullHistoryData = data.history; // เก็บข้อมูลทั้งหมดไว้
+            filterAndRenderHistory(); // เรียกใช้ฟังก์ชันแสดงผลครั้งแรก
+        } else {
+            container.innerHTML = `<p class="no-data">เกิดข้อผิดพลาด: ${data.message}</p>`;
+        }
+    } catch (error) {
+        console.error('Error loading shipment history:', error);
+        container.innerHTML = '<p class="no-data">เกิดข้อผิดพลาดในการโหลดประวัติ</p>';
+    }
+}
+function filterAndRenderHistory() {
+    const container = document.getElementById('history-table-container');
+    const searchKeyword = document.getElementById('history-search').value.toLowerCase();
+    const statusFilter = document.getElementById('history-filter').value;
+
+    // 1. กรองข้อมูลจาก fullHistoryData
+    let filteredData = fullHistoryData.filter(shipment => {
+        // กรองตามสถานะ
+        const statusMatch = (statusFilter === 'all') || (shipment.Status === statusFilter);
+
+        // กรองตาม Keyword (ค้นหาจากหลายๆ field)
+        const keywordMatch = (
+            shipment.ShipmentID.toLowerCase().includes(searchKeyword) ||
+            shipment.Items.toLowerCase().includes(searchKeyword) ||
+            shipment.DispatchedBy.toLowerCase().includes(searchKeyword) ||
+            (shipment.ReceivedBy && shipment.ReceivedBy.toLowerCase().includes(searchKeyword))
+        );
+        
+        return statusMatch && keywordMatch;
+    });
+
+    // 2. สร้างตารางจากข้อมูลที่กรองแล้ว
+    if (filteredData.length === 0) {
+        container.innerHTML = '<p class="no-data">ไม่พบข้อมูลตรงตามเงื่อนไข</p>';
+        return;
+    }
+
+    let tableHTML = `
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>สถานะ</th>
+                    <th>เวลาส่งออก</th>
+                    <th>ผู้ส่ง</th>
+                    <th>เวลาที่รับ</th>
+                    <th>ผู้รับ</th>
+                    <th>ผลการตรวจสอบ</th>
+                    <th>หมายเหตุ</th>
+                    <th>รายการ</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    filteredData.forEach(shipment => {
+        // จัดรูปแบบข้อมูลสำหรับแสดงผล
+        const dispatchTime = shipment.DispatchTimestamp ? new Date(shipment.DispatchTimestamp).toLocaleString('th-TH') : '-';
+        const receiveTime = shipment.ReceivedTimestamp ? new Date(shipment.ReceivedTimestamp).toLocaleString('th-TH') : '-';
+        const items = shipment.Items.replace(/\|\|\|/g, ', ').replace(/::/g, ': ');
+
+        // สร้าง Badge สำหรับสถานะ
+        let statusBadge = '';
+        if (shipment.Status === 'In Transit') statusBadge = `<span class="status-badge status-in-transit">กำลังขนส่ง</span>`;
+        else if (shipment.Status === 'Delayed') statusBadge = `<span class="status-badge status-delayed">ล่าช้า</span>`;
+        else if (shipment.Status === 'Received') statusBadge = `<span class="status-badge status-received">รับของแล้ว</span>`;
+
+        // สร้าง Badge สำหรับผลการตรวจสอบ
+        let verificationBadge = '-';
+        if (shipment.VerificationStatus === 'OK') verificationBadge = `<span class="status-badge status-ok">OK</span>`;
+        else if (shipment.VerificationStatus === 'Discrepancy') verificationBadge = `<span class="status-badge status-discrepancy">ไม่ตรงกัน</span>`;
+
+        tableHTML += `
+            <tr>
+                <td>${shipment.ShipmentID}</td>
+                <td>${statusBadge}</td>
+                <td>${dispatchTime}</td>
+                <td>${shipment.DispatchedBy || '-'}</td>
+                <td>${receiveTime}</td>
+                <td>${shipment.ReceivedBy || '-'}</td>
+                <td>${verificationBadge}</td>
+                <td>${shipment.Notes || '-'}</td>
+                <td style="white-space: normal;">${items}</td>
+            </tr>
+        `;
+    });
+
+    tableHTML += `
+            </tbody>
+        </table>
+    `;
+
+    container.innerHTML = tableHTML;
 }
