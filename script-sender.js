@@ -4,7 +4,7 @@
 
 // **ต้องเปลี่ยน** ใส่ URL ของ Web App ที่คุณ Deploy ครั้งล่าสุด
 const WEB_APP_URL =
-  "https://script.google.com/macros/s/AKfycbz6QJ-jTtkRtFxuj4DNSKFRcabmCCyreQXQccrm-a582ogTPTiaMW15KTIq5QeQViyWGQ/exec";
+  "https://script.google.com/macros/s/AKfycbwMHPiIECGbN_1O-7CJZa-kZl4s5mIy1V8g5DerNjxiuCIB63vYx3z7tcWGXpS_s1e5VQ/exec";
 
 document.addEventListener("DOMContentLoaded", () => {
   loadMasterList();
@@ -121,3 +121,4 @@ async function handleDispatch() {
     dispatchBtn.textContent = "กดเพื่อส่งออก 🚀";
   }
 }
+
