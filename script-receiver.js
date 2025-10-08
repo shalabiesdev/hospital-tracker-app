@@ -3,7 +3,7 @@
 // ==========================================================
 
 // **ต้องเปลี่ยน** ใส่ URL ของ Web App ที่คุณ Deploy ครั้งล่าสุด
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyjUOF4aM4R9ZcObBQS0sn1fZ0JgZHWy7H61cSTsZAOhGwhe33572B4JiFsA3c7ybnYbw/exec';
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz6QJ-jTtkRtFxuj4DNSKFRcabmCCyreQXQccrm-a582ogTPTiaMW15KTIq5QeQViyWGQ/exec';
 
 document.addEventListener('DOMContentLoaded', () => {
     loadInTransitShipments();
