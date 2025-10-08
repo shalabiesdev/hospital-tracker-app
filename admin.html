@@ -39,6 +39,26 @@
           <p>กำลังโหลดรายการ...</p>
         </div>
       </div>
+      <div class="history-container">
+      <h2>ประวัติการส่งทั้งหมด</h2>
+      <div class="history-controls">
+        <input
+          type="text"
+          id="history-search"
+          placeholder="ค้นหาด้วย ID, รายการ, ชื่อ..."
+        />
+        <select id="history-filter">
+          <option value="all">แสดงสถานะทั้งหมด</option>
+          <option value="In Transit">กำลังขนส่ง</option>
+          <option value="Delayed">ล่าช้า</option>
+          <option value="Received">รับของแล้ว</option>
+        </select>
+      </div>
+      <div id="history-table-container">
+        <!-- ตารางประวัติจะถูกสร้างโดย JavaScript ที่นี่ -->
+        <p>กำลังโหลดประวัติ...</p>
+      </div>
+    </div>
     </div>
     <script src="script-admin.js"></script>
   </body>
