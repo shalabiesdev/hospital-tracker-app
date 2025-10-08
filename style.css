@@ -54,7 +54,7 @@ h3 {
 }
 
 .instrument-checklist {
-    max-height: 260px;
+    max-height: 400px;
     overflow-y: auto;
     border: 1px solid #ddd;
     padding: 10px;
@@ -309,27 +309,38 @@ button#refresh-receive-btn:hover {
 }
 
 .delete-btn {
-    background-color: #dc3545; /* สีแดง */
+    background-color: #dc3545;
+    /* สีแดง */
 }
+
 .delete-btn:hover {
     background-color: #c82333;
 }
+
 /* --- Admin Edit Styles --- */
 .edit-btn {
-    background-color: #ffc107; /* สีเหลือง */
+    background-color: #ffc107;
+    /* สีเหลือง */
 }
+
 .edit-btn:hover {
     background-color: #e0a800;
 }
+
 .save-btn {
-    background-color: #28a745; /* สีเขียว */
+    background-color: #28a745;
+    /* สีเขียว */
 }
+
 .save-btn:hover {
     background-color: #218838;
 }
+
 .cancel-btn {
-    background-color: #6c757d; /* สีเทา */
+    background-color: #6c757d;
+    /* สีเทา */
 }
+
 .cancel-btn:hover {
     background-color: #5a6268;
 }
@@ -343,24 +354,30 @@ button#refresh-receive-btn:hover {
 }
 
 /* ใช้ Flexbox จัดการการแสดงผลและการแก้ไข */
-.display-view, .edit-view {
+.display-view,
+.edit-view {
     display: flex;
-    justify-content: space-between; /* ดัน element ไปสุดขอบซ้าย-ขวา */
-    align-items: center;            /* จัดให้อยู่กึ่งกลางแนวตั้ง */
+    justify-content: space-between;
+    /* ดัน element ไปสุดขอบซ้าย-ขวา */
+    align-items: center;
+    /* จัดให้อยู่กึ่งกลางแนวตั้ง */
     width: 100%;
 }
 
 /* จัดการส่วนของชื่อรายการ */
 .display-view span {
-    flex-grow: 1; /* ให้ชื่อรายการยืดขยายเต็มพื้นที่ที่เหลือ */
+    flex-grow: 1;
+    /* ให้ชื่อรายการยืดขยายเต็มพื้นที่ที่เหลือ */
     text-align: left;
     font-size: 1.1em;
 }
 
 /* จัดการกลุ่มของปุ่ม */
-.display-view .actions, .edit-view .actions {
+.display-view .actions,
+.edit-view .actions {
     display: flex;
-    gap: 5px; /* สร้างระยะห่างระหว่างปุ่ม */
+    gap: 5px;
+    /* สร้างระยะห่างระหว่างปุ่ม */
 }
 
 /* จัดการช่อง input ตอนแก้ไข */
@@ -372,38 +389,44 @@ button#refresh-receive-btn:hover {
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+
 /* สไตล์ปุ่มต่างๆ ในหน้า Admin */
 .admin-btn {
     font-size: 0.85em;
     padding: 6px 12px;
     margin: 0;
-    white-space: nowrap; /* ไม่ให้ข้อความในปุ่มขึ้นบรรทัดใหม่ */
+    white-space: nowrap;
+    /* ไม่ให้ข้อความในปุ่มขึ้นบรรทัดใหม่ */
 }
+
 #new-item-input {
-  width: 100%;
-  max-width: 350px;
-  padding: 12px 16px;
-  border: 1.8px solid #d1d5db; /* ขอบเทาอ่อน */
-  border-radius: 10px;
-  font-size: 16px;
-  font-family: 'Inter', 'Prompt', sans-serif;
-  outline: none;
-  background-color: #f9fafb;
-  color: #111827;
-  transition: all 0.25s ease;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    width: 100%;
+    max-width: 350px;
+    padding: 12px 16px;
+    border: 1.8px solid #d1d5db;
+    /* ขอบเทาอ่อน */
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: 'Inter', 'Prompt', sans-serif;
+    outline: none;
+    background-color: #f9fafb;
+    color: #111827;
+    transition: all 0.25s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 #new-item-input::placeholder {
-  color: #9ca3af; /* สีข้อความ placeholder */
-  letter-spacing: 0.3px;
+    color: #9ca3af;
+    /* สีข้อความ placeholder */
+    letter-spacing: 0.3px;
 }
 
 #new-item-input:focus {
-  border-color: #16a34a; /* เขียวสวยๆ เหมือน AIS/Flutter theme */
-  background-color: #ffffff;
-  box-shadow: 0 0 0 3px rgba(34,197,94,0.2);
-  transform: translateY(-1px);
+    border-color: #16a34a;
+    /* เขียวสวยๆ เหมือน AIS/Flutter theme */
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+    transform: translateY(-1px);
 }
 
 /* สไตล์สำหรับแสดง Type */
@@ -415,11 +438,99 @@ button#refresh-receive-btn:hover {
 }
 
 /* จัดสไตล์ dropdown ในหน้า Admin */
-.add-item-form select, .edit-view select {
+.add-item-form select,
+.edit-view select {
     padding: 8px;
     font-size: 1em;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
+/* ================================== */
+/* --- Admin History Styles --- */
+/* ================================== */
 
+.history-controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    /* ให้ขึ้นบรรทัดใหม่บนจอมือถือ */
+}
+
+.history-controls input[type="text"],
+.history-controls select {
+    padding: 8px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    flex-grow: 1;
+    /* ให้ขยายเต็มพื้นที่ */
+}
+
+#history-table-container {
+    overflow-x: auto;
+    /* ทำให้ตารางเลื่อนซ้าย-ขวาได้บนจอมือถือ */
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 0.9em;
+}
+
+.history-table th,
+.history-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+    white-space: nowrap;
+    /* ไม่ตัดคำ */
+}
+
+.history-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.history-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* สไตล์สำหรับป้ายสถานะ (Status Badge) */
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    color: white;
+    font-weight: bold;
+    font-size: 0.8em;
+    display: inline-block;
+}
+
+.status-in-transit {
+    background-color: #007bff;
+}
+
+/* สีน้ำเงิน */
+.status-delayed {
+    background-color: #ffc107;
+    color: #333;
+}
+
+/* สีเหลือง */
+.status-received {
+    background-color: #28a745;
+}
+
+/* สีเขียว */
+.status-discrepancy {
+    background-color: #dc3545;
+}
+
+/* สีแดง */
+.status-ok {
+    background-color: #28a745;
+}
+
+/* สีเขียว */
